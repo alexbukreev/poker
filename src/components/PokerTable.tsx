@@ -97,6 +97,7 @@ export default function PokerTable({
   dealerSeat = "BTN",
   pot = null,
   heroCards = null,
+  onRandom,
 }: PokerTableProps) {
   const map = rotate(heroSeat);
   const coordOf = (s: SeatPos) => map.get(s)!;

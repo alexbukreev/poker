@@ -1,23 +1,16 @@
+// src/App.tsx
 import { useState } from "react";
 import PokerTable from "@/components/PokerTable";
-import {
-  createDefaultState,
-  postBlinds,
-  openRaise,
-  computePot,
-  randomSeatExcept,
-  type TableState,   // <— обратите внимание на `type`
-} from "@/engine/table";
+import { computePot, type TableState } from "@/engine/table";
+import { generateRandomPreflopSpot } from "@/engine/generator";
+import Dock from "@/components/Dock";
+import ControlsPanel from "@/panels/ControlsPanel";
+import QuizzesPanel from "@/panels/QuizzesPanel";
 
 export default function App() {
-  const [state, setState] = useState<TableState>(() => {
-    const s = createDefaultState("UTG");
-    postBlinds(s);                // SB 0.5, BB 1
-    openRaise(s, "BTN", 3);       // BTN 3x
-    return s;
-  });
-
+  const [state, setState] = useState<TableState>(() => generateRandomPreflopSpot());
   const pot = computePot(state);
+  const onRandom = () => setState(generateRandomPreflopSpot());
 
   return (
     <div className="p-6 space-y-4">
@@ -27,21 +20,16 @@ export default function App() {
         stacks={state.stacks}
         contribs={state.contribs}
         pot={pot}
-        heroCards="4♣ K♥"
+        heroCards="A♣ T♦"
       />
 
-      {/* временно: кнопка для смены логической позиции героя */}
-      <button
-        className="rounded-md border px-3 py-1"
-        onClick={() =>
-          setState(prev => ({
-            ...prev,
-            heroSeat: randomSeatExcept(prev.heroSeat),
-          }))
-        }
-      >
-        Random hero seat
-      </button>
+      <Dock side="left" title="Controls" defaultOpen widthClass="w-80">
+        <ControlsPanel state={state} pot={pot} onRandom={onRandom} />
+      </Dock>
+
+      <Dock side="right" title="Quizzes" defaultOpen widthClass="w-80">
+        <QuizzesPanel state={state} />
+      </Dock>
     </div>
   );
 }
