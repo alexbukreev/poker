@@ -4,9 +4,19 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/poker/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      if (
+        localStorage.getItem("theme") === "dark" ||
+        (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    </script>    
     <title>Poker Trainer</title>
-    <script type="module" crossorigin src="/poker/assets/index-BAdorgj4.js"></script>
-    <link rel="stylesheet" crossorigin href="/poker/assets/index-8N1HBUpO.css">
+    <script type="module" crossorigin src="/poker/assets/index-CGAhYTa0.js"></script>
+    <link rel="stylesheet" crossorigin href="/poker/assets/index-C_LesWif.css">
   </head>
   <body>
     <div id="root"></div>

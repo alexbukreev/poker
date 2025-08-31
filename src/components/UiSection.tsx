@@ -18,19 +18,19 @@ export default function UiSection({
     <Collapsible defaultOpen={defaultOpen}>
       <CollapsibleTrigger
         className={
-          "group flex w-full items-center justify-between text-l font-semibold text-white/90 " +
+          "group flex w-full items-center justify-between text-l font-semibold text-foreground " +
           (compactTop ? "pt-0 pb-2" : "py-2")  // ← без верхнего отступа у первого раздела
         }
       >
         <span>{title}</span>
-        <ChevronDown className="h-4 w-4 text-white/60 transition-transform group-data-[state=open]:rotate-180" />
+        <ChevronDown className="h-4 w-4 text-foreground/60 transition-transform group-data-[state=open]:rotate-180" />
       </CollapsibleTrigger>
 
       <CollapsibleContent>
         <div className="pb-3">{children}</div>
       </CollapsibleContent>
 
-      <div className="border-b border-white/12" />
+      <div className="border-b border-foreground/40 dark:border-white/40" />
     </Collapsible>
   );
 }

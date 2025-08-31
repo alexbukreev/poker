@@ -62,17 +62,17 @@ function Seat({
     >
       <div
         className={
-          "flex h-12 w-12 items-center justify-center rounded-full border text-sm font-semibold " +
-          (active ? "bg-white text-black border-white"
-                  : "bg-transparent text-white/70 border-white/30")
+          "flex h-12 w-12 items-center justify-center rounded-full border-2 text-sm font-semibold " +
+          (active ? "bg-foreground text-background border-foreground"
+            : "bg-transparent text-foreground/80 border-foreground/40")
         }
       >
         {label}
       </div>
       {/* стек (без bb) */}
-      <div className="mt-1 text-center text-xs text-white/70">{numberStr(behind)}</div>
+      <div className="mt-1 text-center text-xs text-foreground/70">{numberStr(behind)}</div>
       {active && heroCards ? (
-        <div className="mt-1 text-center text-xs font-semibold text-white">{heroCards}</div>
+        <div className="mt-1 text-center text-xs font-semibold text-foreground">{heroCards}</div>
       ) : null}
     </div>
   );
@@ -82,7 +82,7 @@ function Dealer({ coordNear }: { coordNear: SeatPos }) {
   const c = COORDS[coordNear];
   return (
     <div
-      className="absolute h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/60 bg-white text-[10px] font-bold text-black"
+      className="absolute h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-foreground/50 bg-foreground text-[10px] font-bold text-background"
       style={{ left: `calc(${c.left} - 25px)`, top: `calc(${c.top} + 10px)` }}
     >
       <div className="grid h-full w-full place-content-center">D</div>
@@ -106,10 +106,10 @@ export default function PokerTable({
     Object.values(contribs).reduce((acc, v) => acc + (typeof v === "number" ? v : 0), 0);
 
   return (
-    <div className="relative mx-auto h-[440px] w-full max-w-[720px] text-white">
+    <div className="relative mx-auto h-[440px] w-full max-w-[720px] text-foreground">
       {/* стол */}
-      <div className="absolute inset-0 rounded-[999px] border border-white/15 shadow-[0_0_0_9999px_rgba(0,0,0,0.35)_inset]" />
-      <div className="absolute inset-[6%] rounded-[999px] border border-white/10" />
+      <div className="absolute inset-0 rounded-[999px] border border-border/15 shadow-[0_0_0_9999px_rgba(0,0,0,0.35)_inset]" />
+      <div className="absolute inset-[6%] rounded-[999px] border border-border/10" />
 
       {/* сиденья */}
       {ORDER.map((seat) => (
@@ -137,7 +137,7 @@ export default function PokerTable({
         return (
           <div
             key={`contrib-${seat}`}
-            className="absolute -translate-x-1/2 -translate-y-1/2 rounded-md border border-white/20 bg-white/10 px-2 py-0.5 text-xs"
+            className="absolute -translate-x-1/2 -translate-y-1/2 rounded-md border-2 border-foreground/25 bg-foreground/10 px-2 py-0.5 text-xs"
             style={{
               left: `calc(${COORDS[coord].left} + ${offset.dx}px)`,
               top:  `calc(${COORDS[coord].top}  + ${offset.dy}px)`,
@@ -151,9 +151,13 @@ export default function PokerTable({
       {/* центр: Pot (без bb) */}
       <div className="absolute left-1/2 top-1/2 grid -translate-x-1/2 -translate-y-1/2 grid-cols-5 gap-2">
         {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="grid h-14 w-9 place-content-center rounded-md border border-white/20 bg-white/5 text-white/60">W</div>
+          <div
+            key={i}
+            className="grid h-14 w-9 place-content-center rounded-md border-2 border-foreground/25 bg-foreground/5"
+            aria-hidden="true"
+          />
         ))}
-        <div className="col-span-5 mt-2 text-center text-xs text-white/80">
+        <div className="col-span-5 mt-2 text-center text-xs text-foreground/80">
           Pot: {numberStr(potNow)}
         </div>
       </div>

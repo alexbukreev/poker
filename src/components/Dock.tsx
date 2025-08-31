@@ -26,7 +26,7 @@ export default function Dock({
           aria-expanded={open}
           aria-controls={id}
           onClick={() => setOpen(true)}
-          className={`fixed top-1/2 -translate-y-1/2 z-50 h-7 w-7 border border-white/20 bg-white/10 ${
+          className={`fixed top-1/2 -translate-y-1/2 z-50 h-7 w-7 border border-border bg-foreground/10 ${
             side === "left" ? "left-0 rounded-r-md" : "right-0 rounded-l-md"
           }`}
         />
@@ -36,13 +36,14 @@ export default function Dock({
         <SheetContent
           side={side}
           id={id}
-          className={`${widthClass} border-white/15 bg-black/90 text-white`}
+          className={`${widthClass} border-border bg-background/90 text-foreground`}
           onPointerDownOutside={(e) => (e as any).preventDefault()}
           onFocusOutside={(e) => (e as any).preventDefault()}
           onOpenAutoFocus={(e) => e.preventDefault()}
         >
-          <SheetHeader className="border-b border-white/10 px-4 py-2">
-            <SheetTitle className="text-white text-base md:text-lg">{title}</SheetTitle>
+          
+          <SheetHeader className="border-b border-foreground/90 dark:border-white/90 px-4 py-2">
+            <SheetTitle className="text-foreground text-base md:text-lg">{title}</SheetTitle>
           </SheetHeader>
           <div className="px-4 pt-0 -mt-2 pb-4">{children}</div>
         </SheetContent>
