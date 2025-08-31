@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import UiSection from "@/components/UiSection";
 import type { TableState } from "@/engine/table";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { usePrefs } from "@/state/prefs";
 
 export default function ControlsPanel({
   state,
@@ -13,6 +15,7 @@ export default function ControlsPanel({
   pot: number;
   onRandom: () => void;
 }) {
+  const { errorTol, setErrorTol } = usePrefs();
   return (
     <div className="text-foreground">
       <UiSection title="Table" defaultOpen compactTop>
@@ -66,6 +69,23 @@ export default function ControlsPanel({
               className="w-full rounded-md border border-border bg-background px-2 py-1 outline-none"
             />
           </label>
+        </div>
+
+        {/* Error tolerance */}
+        <div className="mt-3">
+          <div className="mb-1 flex items-center justify-between text-sm text-foreground/80">
+            <span>Error tolerance</span>
+            <span className="text-foreground font-semibold">{errorTol.toFixed(1)}%</span>
+          </div>
+          <Slider
+            value={[errorTol]}
+            min={0}
+            max={10}
+            step={0.1}
+            onValueChange={(v) => setErrorTol(v[0] ?? errorTol)}
+            className="w-full"
+          />
+          <div className="mt-1 text-[11px] text-foreground/60">Green ≤ tolerance</div>
         </div>
       </UiSection>
 
