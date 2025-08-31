@@ -20,7 +20,7 @@ function fmt(n: number) {
   return Math.abs(r - Math.round(r)) < 1e-9 ? String(Math.round(r)) : r.toFixed(1);
 }
 
-export default function PotOddsQuiz({ state }: { state: TableState }) {
+export default function PotOddsQuiz({ state, onNewSpot }: { state: TableState; onNewSpot: () => void }) {
   const po = useMemo(() => buildPotOddsFromState(state), [state]);
   const [value, setValue] = useState(0); // 0–100 (%)
   const [checked, setChecked] = useState<null | { correct: number; error: number }>(null);
@@ -86,8 +86,9 @@ export default function PotOddsQuiz({ state }: { state: TableState }) {
         />
       </div>
 
-      <div className="pt-1">
+      <div className="pt-1 flex items-center gap-2">
         <Button variant="outline" onClick={onCheck}>Check</Button>
+        <Button variant="outline" onClick={onNewSpot}>New spot</Button>
       </div>
 
       {checked && (

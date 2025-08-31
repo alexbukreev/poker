@@ -36,7 +36,7 @@ export default function Dock({
         <SheetContent
           side={side}
           id={id}
-          className={`${widthClass} border-border bg-background/90 text-foreground`}
+          className={`${widthClass} border-border bg-background/100 text-foreground`}
           onPointerDownOutside={(e) => (e as any).preventDefault()}
           onFocusOutside={(e) => (e as any).preventDefault()}
           onOpenAutoFocus={(e) => e.preventDefault()}

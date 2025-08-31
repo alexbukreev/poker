@@ -1,75 +1,71 @@
 // src/panels/ControlsPanel.tsx
 import { useEffect, useState } from "react";
 import UiSection from "@/components/UiSection";
-import type { TableState } from "@/engine/table";
+import type { SeatPos } from "@/engine/table";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { usePrefs } from "@/state/prefs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+type HeroChoice = SeatPos | "random";
 
 export default function ControlsPanel({
-  state,
   pot,
-  onRandom,
+  onGenerate,
+  heroPref,
+  onChangeHeroPref,
 }: {
-  state: TableState;
   pot: number;
-  onRandom: () => void;
+  onGenerate: (opts: { hero: HeroChoice }) => void;
+  heroPref: HeroChoice;
+  onChangeHeroPref: (v: HeroChoice) => void;
 }) {
   const { errorTol, setErrorTol } = usePrefs();
+
   return (
     <div className="text-foreground">
       <UiSection title="Table" defaultOpen compactTop>
-        <div className="space-y-1 text-sm text-foreground/80">
-          <div>
-            Hero: <b className="text-foreground">{state.heroSeat}</b>
-          </div>
+        <div className="space-y-3 text-sm text-foreground/80">
+          <label className="block">
+            <div className="mb-1">Hero</div>
+            <Select
+              value={heroPref}
+              onValueChange={(v) => onChangeHeroPref((v as HeroChoice) ?? "random")}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Choose hero" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="random">Random</SelectItem>
+                <SelectItem value="UTG">UTG</SelectItem>
+                <SelectItem value="HJ">HJ</SelectItem>
+                <SelectItem value="CO">CO</SelectItem>
+                <SelectItem value="BTN">BTN</SelectItem>
+                <SelectItem value="SB">SB</SelectItem>
+                <SelectItem value="BB">BB</SelectItem>
+              </SelectContent>
+            </Select>
+          </label>
+
           <div>
             Pot: <b className="text-foreground">{Math.round(pot * 10) / 10}</b>
           </div>
         </div>
+
         <div className="mt-3">
           <Button
             variant="outline"
             size="sm"
-              onClick={onRandom}
-              className="w-full" // убери, если не нужна растяжка
+            onClick={() => onGenerate({ hero: heroPref })}
+            className="w-full"
           >
-            Random spot
+            New spot
           </Button>
         </div>
       </UiSection>
-      
-      <UiSection title="Preferences" defaultOpen>
-        {/* UI-муляж (без логики) */}
-        <div className="mb-3 flex items-center justify-between">
-          <span className="text-sm text-foreground/80">Rake</span>
-          <div className="h-6 w-11 rounded-full border border-border bg-foreground/10">
-            <div className="h-5 w-5 translate-x-[2px] translate-y-[2px] rounded-full bg-foreground" />
-          </div>
-        </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <label className="text-sm text-foreground/80">
-            <div className="mb-1">Rake %</div>
-            <input
-              type="number"
-              step="0.1"
-              defaultValue={5.0}
-              readOnly
-              className="w-full rounded-md border border-border bg-background px-2 py-1 outline-none"
-            />
-          </label>
-          <label className="text-sm text-foreground/80">
-            <div className="mb-1">Cap (bb)</div>
-            <input
-              type="number"
-              step="0.1"
-              defaultValue={5.0}
-              readOnly
-              className="w-full rounded-md border border-border bg-background px-2 py-1 outline-none"
-            />
-          </label>
-        </div>
+      <UiSection title="Preferences" defaultOpen>
+        {/* ... твой блок Rake ... */}
 
         {/* Error tolerance */}
         <div className="mt-3">
@@ -96,10 +92,10 @@ export default function ControlsPanel({
   );
 }
 
+/* ⬇️ вернуть ThemeToggle */
 function ThemeToggle() {
   const [isDark, setIsDark] = useState(false);
 
-  // инициализация от текущего DOM (скрипт в index.html уже мог выставить класс)
   useEffect(() => {
     if (typeof document === "undefined") return;
     setIsDark(document.documentElement.classList.contains("dark"));

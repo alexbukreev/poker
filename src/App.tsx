@@ -1,17 +1,25 @@
 // src/App.tsx
 import { useState } from "react";
 import PokerTable from "@/components/PokerTable";
-import { computePot, type TableState } from "@/engine/table";
-import { generateRandomPreflopSpot } from "@/engine/generator";
+import { computePot, type TableState, type SeatPos } from "@/engine/table";
+import { generatePreflopSpot, generateRandomPreflopSpot } from "@/engine/generator";
 import Dock from "@/components/Dock";
 import ControlsPanel from "@/panels/ControlsPanel";
 import QuizzesPanel from "@/panels/QuizzesPanel";
 import { PrefsProvider } from "@/state/prefs";
 
+type HeroChoice = SeatPos | "random";
+
 export default function App() {
   const [state, setState] = useState<TableState>(() => generateRandomPreflopSpot());
   const pot = computePot(state);
-  const onRandom = () => setState(generateRandomPreflopSpot());
+
+  // ← всегда "random" после перезагрузки
+  const [heroPref, setHeroPref] = useState<HeroChoice>("random");
+
+  const onGenerate = ({ hero }: { hero: HeroChoice }) => {
+    setState(generatePreflopSpot({ hero }));
+  };
 
   return (
     <PrefsProvider>
@@ -26,11 +34,19 @@ export default function App() {
         />
 
         <Dock side="left" title="Controls" defaultOpen widthClass="w-80">
-          <ControlsPanel state={state} pot={pot} onRandom={onRandom} />
+          <ControlsPanel
+            pot={pot}
+            onGenerate={onGenerate}
+            heroPref={heroPref}
+            onChangeHeroPref={setHeroPref}
+          />
         </Dock>
 
         <Dock side="right" title="Quizzes" defaultOpen widthClass="w-80">
-          <QuizzesPanel state={state} />
+          <QuizzesPanel
+            state={state}
+            onNewSpot={() => onGenerate({ hero: heroPref })}
+          />
         </Dock>
       </div>
     </PrefsProvider>

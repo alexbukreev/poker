@@ -1,3 +1,4 @@
+// src/engine/table.ts
 // Типы
 export type SeatPos = "UTG" | "HJ" | "CO" | "BTN" | "SB" | "BB";
 export const ALL_SEATS: SeatPos[] = ["HJ","CO","BTN","SB","BB","UTG"];
