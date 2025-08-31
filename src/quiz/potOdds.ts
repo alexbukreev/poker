@@ -11,7 +11,8 @@ export function potOddsThreshold(callAmount: number, potBefore: number): number 
 export function buildPotOddsFromState(state: TableState, forSeat: SeatPos) {
   const potBefore = computePot(state);
   const myPut = state.contribs[forSeat] ?? 0;
-  const maxPut = Math.max(...Object.values(state.contribs).map(v => v ?? 0), 0);
+  // src/quiz/potOdds.ts
+  const maxPut = Math.max(0, ...Object.values(state.contribs).map(v => v ?? 0));
   const toCall = Math.max(0, maxPut - myPut);
   const threshold = potOddsThreshold(toCall, potBefore);
   return { potBefore, toCall, threshold };
