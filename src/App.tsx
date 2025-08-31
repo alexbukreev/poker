@@ -1,4 +1,3 @@
-// src/App.tsx
 import { useState } from "react";
 import PokerTable from "@/components/PokerTable";
 import { computePot, type TableState, type SeatPos } from "@/engine/table";
@@ -14,9 +13,10 @@ export default function App() {
   const [state, setState] = useState<TableState>(() => generateRandomPreflopSpot());
   const pot = computePot(state);
 
-  // ← всегда "random" после перезагрузки
-  const [heroPref, setHeroPref] = useState<HeroChoice>("random");
+  // ← статистика квиза живёт здесь и не теряется при закрытии панели
+  const [poStats, setPoStats] = useState<number[]>([]);
 
+  const [heroPref, setHeroPref] = useState<HeroChoice>("random");
   const onGenerate = ({ hero }: { hero: HeroChoice }) => {
     setState(generatePreflopSpot({ hero }));
   };
@@ -46,6 +46,9 @@ export default function App() {
           <QuizzesPanel
             state={state}
             onNewSpot={() => onGenerate({ hero: heroPref })}
+            stats={poStats}
+            onAddStat={(err) => setPoStats((prev) => [...prev, Number(err.toFixed(1))])}
+            onResetStats={() => setPoStats([])}
           />
         </Dock>
       </div>

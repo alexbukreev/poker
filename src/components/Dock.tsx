@@ -41,7 +41,6 @@ export default function Dock({
           onFocusOutside={(e) => (e as any).preventDefault()}
           onOpenAutoFocus={(e) => e.preventDefault()}
         >
-          
           <SheetHeader className="border-b border-foreground/90 dark:border-white/90 px-4 py-2">
             <SheetTitle className="text-foreground text-base md:text-lg">{title}</SheetTitle>
           </SheetHeader>

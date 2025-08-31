@@ -59,7 +59,7 @@ export default function ControlsPanel({
             onClick={() => onGenerate({ hero: heroPref })}
             className="w-full"
           >
-            New spot
+            Generate spot
           </Button>
         </div>
       </UiSection>

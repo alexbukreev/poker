@@ -1,7 +1,10 @@
+// src/quiz/PotOddsQuiz.txt
 import { useEffect, useMemo, useState } from "react";
 import type { TableState } from "@/engine/table";
 import { buildPotOddsFromState } from "@/quiz/potOdds";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { usePrefs } from "@/state/prefs";
 import {
   ResponsiveContainer,
   LineChart,
@@ -11,26 +14,36 @@ import {
   CartesianGrid,
   Tooltip,
 } from "recharts";
-import { usePrefs } from "@/state/prefs";
-import { Slider } from "@/components/ui/slider";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-// локальный форматтер: 1 знак, целые без .0
+// 1 знак, целые без .0
 function fmt(n: number) {
   const r = Math.round(n * 10) / 10;
   return Math.abs(r - Math.round(r)) < 1e-9 ? String(Math.round(r)) : r.toFixed(1);
 }
 
-export default function PotOddsQuiz({ state, onNewSpot }: { state: TableState; onNewSpot: () => void }) {
+type Props = {
+  state: TableState;
+  onNewSpot: () => void;
+  stats: number[];                 // ← приходит сверху (App)
+  onAddStat: (err: number) => void;
+  onResetStats: () => void;
+};
+
+export default function PotOddsQuiz({
+  state,
+  onNewSpot,
+  stats,
+  onAddStat,
+  onResetStats,
+}: Props) {
   const po = useMemo(() => buildPotOddsFromState(state), [state]);
   const [value, setValue] = useState(0); // 0–100 (%)
   const [checked, setChecked] = useState<null | { correct: number; error: number }>(null);
 
-  // статистика текущей сессии: список ошибок по попыткам
-  const [stats, setStats] = useState<number[]>([]);
+  const { errorTol } = usePrefs();
 
-  const { errorTol } = usePrefs();           // take threshold from prefs
-
-  // новый спот — сброс ползунка/результата, НО статистику не трогаем (это "сессия")
+  // новый спот — сброс ползунка/результата, статистика хранится в App
   useEffect(() => {
     setValue(0);
     setChecked(null);
@@ -40,11 +53,12 @@ export default function PotOddsQuiz({ state, onNewSpot }: { state: TableState; o
     const correct = Math.round(po.threshold * 10) / 10;
     const error = Math.abs(value - correct);
     setChecked({ correct, error });
-    setStats((prev) => [...prev, Number(error.toFixed(1))]);
+    onAddStat(Number(error.toFixed(1)));  // ← пишем в App
   }
 
   const ok = checked ? checked.error <= errorTol : false;
 
+  // цветные точки по порогу из преференсов
   const Dot = (props: any) => {
     const { cx, cy, value, payload } = props;
     const err = typeof value === "number" ? value : payload?.err;
@@ -58,11 +72,15 @@ export default function PotOddsQuiz({ state, onNewSpot }: { state: TableState; o
     return <circle cx={cx} cy={cy} r={3.5} className={good ? "fill-green-500" : "fill-red-500"} />;
   };
 
-  const avg =
-    stats.length > 0 ? stats.reduce((a, b) => a + b, 0) / stats.length : 0;
+  // агрегаты
+  const avg = stats.length > 0 ? stats.reduce((a, b) => a + b, 0) / stats.length : 0;
   const best = stats.length > 0 ? Math.min(...stats) : null;
-
   const chartData = stats.map((err, i) => ({ i: i + 1, err }));
+
+  // точная подстройка
+  const STEP = 0.1;
+  const clamp01 = (x: number) => Math.max(0, Math.min(100, x));
+  const nudge = (d: number) => setValue((p) => Number(clamp01(p + d).toFixed(1)));
 
   return (
     <div className="space-y-3 select-none">
@@ -88,15 +106,21 @@ export default function PotOddsQuiz({ state, onNewSpot }: { state: TableState; o
 
       <div className="pt-1 flex items-center gap-2">
         <Button variant="outline" onClick={onCheck}>Check</Button>
-        <Button variant="outline" onClick={onNewSpot}>New spot</Button>
+        <Button variant="outline" onClick={onNewSpot}>Generate spot</Button>
+        <div className="ml-auto flex items-center gap-1">
+          <Button variant="outline" size="icon" onClick={() => nudge(-STEP)} aria-label="Decrease by 0.1%">
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button variant="outline" size="icon" onClick={() => nudge(+STEP)} aria-label="Increase by 0.1%">
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
       {checked && (
         <div className="mt-3 text-sm">
           Correct: <b>{checked.correct.toFixed(1)}%</b> • Error:{" "}
-          <b className={ok ? "text-green-500" : "text-red-500"}>
-            {checked.error.toFixed(1)}%
-          </b>
+          <b className={ok ? "text-green-500" : "text-red-500"}>{checked.error.toFixed(1)}%</b>
           {ok ? " ✓" : " ✗"}
         </div>
       )}
@@ -106,7 +130,7 @@ export default function PotOddsQuiz({ state, onNewSpot }: { state: TableState; o
           <div className="text-xs text-foreground/70">
             Attempts: <b className="text-foreground">{stats.length}</b>
             {" • "}Avg error:{" "}
-            <b className={avg <= 0.5 ? "text-green-500" : "text-foreground"}>
+            <b className={avg <= errorTol ? "text-green-500" : "text-foreground"}>
               {avg.toFixed(1)}%
             </b>
             {best !== null && (
@@ -118,36 +142,18 @@ export default function PotOddsQuiz({ state, onNewSpot }: { state: TableState; o
 
           <div className="h-36 text-foreground">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={chartData}
-                margin={{ left: 40, right: 5, top: 0, bottom: -10 }}   // без левого зазора
-              >
-                <CartesianGrid
-                  stroke="hsl(var(--border))"
-                  strokeOpacity={0.4}
-                  vertical={false}
-                />
-
-                {/* X — КАТЕГОРИЙНАЯ ось (как было изначально), чтобы подписи не «улетали» */}
-                <XAxis
-                  dataKey="i"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={0}
-                  tick={{ fontSize: 10, fill: "currentColor" }}
-                />
-
-                {/* Y — подписи внутри графика, минимальный резерв 1px, чтобы не клиповало */}
+              <LineChart data={chartData} margin={{ left: 40, right: 5, top: 0, bottom: -10 }}>
+                <CartesianGrid stroke="hsl(var(--border))" strokeOpacity={0.4} vertical={false} />
+                <XAxis dataKey="i" tickLine={false} axisLine={false} tickMargin={0} tick={{ fontSize: 10, fill: "currentColor" }} />
                 <YAxis
                   domain={[0, "dataMax + 1"]}
                   tickLine={false}
                   axisLine={false}
                   mirror
-                  width={1}                // критично: не 0, иначе Recharts режет тики
+                  width={1}
                   tickMargin={-40}
                   tick={{ fontSize: 10, fill: "currentColor" }}
                 />
-
                 <Tooltip
                   contentStyle={{
                     background: "hsl(var(--background))",
@@ -158,19 +164,13 @@ export default function PotOddsQuiz({ state, onNewSpot }: { state: TableState; o
                   formatter={(v) => [`${v}%`, "Error"]}
                   labelFormatter={(l) => `Attempt ${l}`}
                 />
-                <Line
-                  type="monotone"
-                  dataKey="err"
-                  stroke="hsl(var(--foreground))"
-                  strokeWidth={2}
-                  dot={<Dot />}
-                  activeDot={<ActiveDot />}
-                />
+                <Line type="monotone" dataKey="err" stroke="hsl(var(--foreground))" strokeWidth={2} dot={<Dot />} activeDot={<ActiveDot />} />
               </LineChart>
             </ResponsiveContainer>
           </div>
+
           <div className="flex justify-end">
-            <Button variant="ghost" size="sm" onClick={() => setStats([])}>
+            <Button variant="ghost" size="sm" onClick={onResetStats}>
               Reset session
             </Button>
           </div>
