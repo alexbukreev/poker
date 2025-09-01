@@ -22,11 +22,18 @@ export type PreAction =
   | { seat: SeatPos; type: "call" }
   | { seat: SeatPos; type: "fold" };
 
-/** What the correct solution expects (MVP) */
+// Альтернативы (миксы) в формате массива — v1.1
+export type MixAlt = {
+  action: "fold" | "call" | "raise_to";
+  bb?: number;          // нужен только для raise_to
+  freq_pct?: number;    // опционально: частота микса (для справки/будущего)
+};
+
 export type Solution =
-  | { action: "fold" }
-  | { action: "call";    mix?: { raise_to?: number; raise_freq_pct?: number } } // allow 3-bet mix
-  | { action: "raise_to"; bb: number; mix?: { call_freq_pct?: number } };        // allow call mix
+  | { action: "fold";      mix?: MixAlt[] }
+  | { action: "call";      mix?: MixAlt[] }
+  | { action: "raise_to";  bb: number; mix?: MixAlt[] };
+
 
 export type Scenario = {
   id: string;
@@ -38,6 +45,7 @@ export type Scenario = {
     to_call?: number;
     pot_odds_threshold_pct?: number;
     mdf_pct?: number;
+    mdf_vs_open_pct?: number; 
   };
   solution: Solution;
   allowed_bets?: number[]; // UI raise buttons
@@ -96,31 +104,44 @@ export function buildStateFromScenario(pack: PreflopPack, sc: Scenario): TableSt
 export function evaluateAnswer(sc: Scenario, ua: UserAnswer): Verdict {
   const sol = sc.solution;
 
+  // 1) helper: совпадает ли ответ хоть с одним вариантом в mix[]
+  const inMix =
+    Array.isArray(sol.mix) &&
+    sol.mix.some((m) => {
+      if (ua.action !== m.action) return false;
+      if (ua.action === "raise_to") {
+        // если указан целевой сайз в миксе — сравним с небольшим допуском
+        if (typeof m.bb === "number") {
+          if (typeof ua.bb !== "number") return false;
+          return Math.abs(ua.bb - m.bb) <= 0.26; // ~¼ bb допуск
+        }
+      }
+      return true; // fold/call или raise_to без сайза в миксе
+    });
+
+  // 2) основная логика вердикта
   switch (sol.action) {
     case "fold": {
-      return { kind: ua.action === "fold" ? "correct" : "wrong" };
+      if (ua.action === "fold") return { kind: "correct" };
+      return { kind: inMix ? "partial" : "wrong", note: inMix ? "Mix allows your option" : undefined };
     }
 
     case "call": {
       if (ua.action === "call") return { kind: "correct" };
-      // partially ok if solution allows a 3-bet mix
-      if (ua.action === "raise_to" && sol.mix?.raise_to)
-        return { kind: "partial", note: "Mix: sometimes 3-bet allowed" };
-      return { kind: "wrong" };
+      return { kind: inMix ? "partial" : "wrong", note: inMix ? "Mix allows your option" : undefined };
     }
 
     case "raise_to": {
       if (ua.action === "raise_to") {
-        // (optionally compare sizes with tolerance here)
+        // при желании тут можно учитывать eval_prefs.size_tolerance_bb из пакета
+        // пока засчитываем любой raise_to как correct
         return { kind: "correct" };
       }
-      // partially ok if solution allows call mix
-      if (ua.action === "call" && sol.mix?.call_freq_pct)
-        return { kind: "partial", note: "Mix: sometimes call allowed" };
-      return { kind: "wrong" };
+      return { kind: inMix ? "partial" : "wrong", note: inMix ? "Mix allows your option" : undefined };
     }
   }
 }
+
 
 /** Normalize unknown input into PreflopPack; throws on invalid. */
 export function normalizePack(input: unknown): PreflopPack {
