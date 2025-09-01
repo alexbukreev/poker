@@ -7,19 +7,19 @@ export default function UiSection({
   title,
   defaultOpen = true,
   children,
-  compactTop = false,          // ← NEW
+  compactTop = false,
 }: {
   title: string;
   defaultOpen?: boolean;
   children: ReactNode;
-  compactTop?: boolean;        // ← NEW
+  compactTop?: boolean;
 }) {
   return (
     <Collapsible defaultOpen={defaultOpen}>
       <CollapsibleTrigger
         className={
           "group flex w-full items-center justify-between text-l font-semibold text-foreground " +
-          (compactTop ? "pt-0 pb-2" : "py-2")  // ← без верхнего отступа у первого раздела
+          (compactTop ? "pt-0 pb-2" : "py-2")
         }
       >
         <span>{title}</span>

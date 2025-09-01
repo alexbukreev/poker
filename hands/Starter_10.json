@@ -1,0 +1,46 @@
+{
+    "version": "1.0",
+    "meta": { "name": "Starter 10", "author": "you", "game": "NLHE 6-max" },
+    "blind_config": { "sb": 0.5, "bb": 1.0, "ante": 0 },
+    "effective_bb": 100,
+  
+    "range_presets": [
+      { "id": "rfi_utg_19", "label": "UTG RFI ~19%", "range": "22+,A5s+,KTs+,QTs+,JTs,ATo+,KQo" },
+      { "id": "rfi_hj_22",  "label": "HJ RFI ~22%",  "range": "22+,A2s+,KTs+,QTs+,JTs,T9s,98s,ATo+,KJo+,QJo" },
+      { "id": "rfi_co_29",  "label": "CO RFI ~29%",  "range": "22+,A2s+,K9s+,Q9s+,J9s+,T8s+,98s,87s,76s,65s,ATo+,KTo+,QTo+,JTo" },
+      { "id": "rfi_btn_48", "label": "BTN RFI ~48%", "range": "22+,A2s+,K2s+,Q5s+,J7s+,T7s+,97s+,87s,76s,65s,54s,A2o+,K7o+,Q9o+,J9o+,T9o" },
+      { "id": "rfi_sb_40",  "label": "SB RFI ~40%",  "range": "22+,A2s+,K2s+,Q6s+,J8s+,T8s+,98s,87s,76s,65s,54s,A2o+,K8o+,Q9o+,J9o+,T9o" },
+  
+      { "id": "bb_btn_2p5_call", "label": "BB vs BTN 2.5x — calls", "range": "22+,A2s+,K5s+,Q8s+,J8s+,T8s+,97s+,86s+,A2o+,K9o+,Q9o+,J9o+,T9o" },
+      { "id": "bb_btn_2p5_3bet","label": "BB vs BTN 2.5x — 3bet", "range": "JJ+,AQs+,AJs,KQs,A5s-A2s,AQo" }
+    ],
+  
+    "scenarios": [
+      {
+        "id": "S1",
+        "hero": { "seat": "BB", "cards": "Ks9s" },
+        "pre_actions": [
+          { "seat": "BTN", "type": "raise_to", "bb": 2.5 },
+          { "seat": "SB",  "type": "fold" }
+        ],
+        "ranges": [{ "seat": "BTN", "preset": "rfi_btn_48" }],
+        "metrics": { "pot_before": 4.0, "to_call": 1.5, "pot_odds_threshold_pct": 27.3, "mdf_pct": 37.5 },
+        "solution": { "action": "call" },
+        "allowed_bets": [9.0, 10.5, 11.0],
+        "comment": "Широкий BTN; K9s играбелен в защите BB.",
+        "tags": ["BBvsBTN","single-raised-pot"], "difficulty": "easy"
+      },
+      {
+        "id": "S2",
+        "hero": { "seat": "SB", "cards": "JhTh" },
+        "pre_actions": [{ "seat": "BTN", "type": "raise_to", "bb": 2.5 }],
+        "ranges": [{ "seat": "BTN", "preset": "rfi_btn_48" }],
+        "metrics": { "pot_before": 4.0, "to_call": 2.0, "pot_odds_threshold_pct": 33.3, "mdf_pct": 37.5 },
+        "solution": { "action": "raise_to", "bb": 9.0, "mix": { "call_freq_pct": 30 } },
+        "allowed_bets": [8.5, 9.0, 10.5],
+        "comment": "SB предпочитает 3-бет/фолд против широкого BTN.",
+        "tags": ["SBvsBTN","3bet-or-fold"], "difficulty": "medium"
+      }
+    ]
+  }
+  

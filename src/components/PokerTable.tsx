@@ -1,4 +1,6 @@
 // src/components/PokerTable.tsx
+import { InlineHand } from "@/components/cards";
+
 export type SeatPos = "UTG" | "HJ" | "CO" | "BTN" | "SB" | "BB";
 export type Contribs = Partial<Record<SeatPos, number>>;
 
@@ -72,8 +74,11 @@ function Seat({
       {/* стек (без bb) */}
       <div className="mt-1 text-center text-xs text-foreground/70">{numberStr(behind)}</div>
       {active && heroCards ? (
-        <div className="mt-1 text-center text-xs font-semibold text-foreground">{heroCards}</div>
+        <div className="mt-1 text-center text-xs font-semibold">
+          <InlineHand hand={heroCards} />
+        </div>
       ) : null}
+
     </div>
   );
 }

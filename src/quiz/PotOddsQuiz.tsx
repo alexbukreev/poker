@@ -83,7 +83,7 @@ export default function PotOddsQuiz({
   const nudge = (d: number) => setValue((p) => Number(clamp01(p + d).toFixed(1)));
 
   return (
-    <div className="space-y-3 select-none">
+    <div className="space-y-3 select-none overflow-x-hidden">
       <div className="text-sm text-foreground/80">
         Pot (before decision): <b>{fmt(po.potBefore)}</b> • To call: <b>{fmt(po.toCall)}</b>
       </div>
@@ -105,9 +105,24 @@ export default function PotOddsQuiz({
       </div>
 
       <div className="pt-1 flex items-center gap-2">
-        <Button variant="outline" onClick={onCheck}>Check</Button>
-        <Button variant="outline" onClick={onNewSpot}>Generate spot</Button>
-        <div className="ml-auto flex items-center gap-1">
+        {/* Левый блок растягивается и поджимается */}
+        <div className="flex-1 min-w-0 flex items-center gap-2">
+          <Button variant="outline" className="shrink-0 px-3" onClick={onCheck}>
+            Check
+          </Button>
+          {/* Эта кнопка автоматически сужается и, если нужно, обрезает текст */}
+          <Button
+            variant="outline"
+            className="min-w-0 flex-1 px-3 truncate"
+            onClick={onNewSpot}
+            title="Generate spot"
+          >
+            Generate spot
+          </Button>
+        </div>
+
+        {/* Правый блок с иконками фиксированной ширины */}
+        <div className="ml-2 flex items-center gap-1 shrink-0">
           <Button variant="outline" size="icon" onClick={() => nudge(-STEP)} aria-label="Decrease by 0.1%">
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -116,6 +131,7 @@ export default function PotOddsQuiz({
           </Button>
         </div>
       </div>
+
 
       {checked && (
         <div className="mt-3 text-sm">
