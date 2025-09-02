@@ -1,0 +1,386 @@
+{
+    "version": "1.1",
+    "blind_config": { "sb": 0.5, "bb": 1.0, "ante": 0 },
+    "effective_bb": 100,
+    "range_presets": [],
+    "scenarios": [
+      {
+        "id": "A1-001",
+        "hero": { "seat": "BB", "cards": "Ks9s", "hand": "K9s" },
+        "pre_actions": [
+          { "seat": "BTN", "type": "raise_to", "bb": 2.5 },
+          { "seat": "SB", "type": "fold" }
+        ],
+        "ranges": [
+          { "seat": "BTN", "preset": "rfi_btn_48" }
+        ],
+        "metrics": { "pot_before": 4.0, "to_call": 1.5, "pot_odds_threshold_pct": 27.3 },
+        "solution": { "action": "call" },
+        "comment": "Порог колла = 27.3%. Стандартная защита BB против широкого BTN-опена.",
+        "tags": ["pot-odds", "single-raised-pot"],
+        "difficulty": "medium"
+      },
+      {
+        "id": "A1-002",
+        "hero": { "seat": "BB", "cards": "Qs7h", "hand": "Q7o" },
+        "pre_actions": [
+          { "seat": "BTN", "type": "raise_to", "bb": 3.0 },
+          { "seat": "SB", "type": "fold" }
+        ],
+        "ranges": [
+          { "seat": "BTN", "preset": "rfi_btn_48" }
+        ],
+        "metrics": { "pot_before": 4.5, "to_call": 2.0, "pot_odds_threshold_pct": 30.8 },
+        "solution": { "action": "fold" },
+        "comment": "Порог колла = 30.8%. Сайз 3.0bb повышает порог колла до ~31%.",
+        "tags": ["pot-odds", "single-raised-pot"],
+        "difficulty": "hard"
+      },
+      {
+        "id": "A1-003",
+        "hero": { "seat": "BB", "cards": "8s6s", "hand": "86s" },
+        "pre_actions": [
+          { "seat": "CO", "type": "raise_to", "bb": 2.2 },
+          { "seat": "SB", "type": "fold" }
+        ],
+        "ranges": [
+          { "seat": "CO", "preset": "rfi_co_29" }
+        ],
+        "metrics": { "pot_before": 3.7, "to_call": 1.2, "pot_odds_threshold_pct": 24.5 },
+        "solution": { "action": "call" },
+        "comment": "Порог колла = 24.5%. Хорошие пот-оддсы против среднего CO-опена.",
+        "tags": ["pot-odds", "single-raised-pot"],
+        "difficulty": "medium"
+      },
+      {
+        "id": "A1-004",
+        "hero": { "seat": "BB", "cards": "As4h", "hand": "A4o" },
+        "pre_actions": [
+          { "seat": "UTG", "type": "raise_to", "bb": 2.5 },
+          { "seat": "SB", "type": "fold" }
+        ],
+        "ranges": [
+          { "seat": "UTG", "preset": "rfi_utg_19" }
+        ],
+        "metrics": { "pot_before": 4.0, "to_call": 1.5, "pot_odds_threshold_pct": 27.3 },
+        "solution": { "action": "fold" },
+        "comment": "Порог колла = 27.3%. Против тайтового UTG-опена на краю — фолд по эквити.",
+        "tags": ["pot-odds", "single-raised-pot"],
+        "difficulty": "hard"
+      },
+      {
+        "id": "A1-005",
+        "hero": { "seat": "BB", "cards": "9s7h", "hand": "97o" },
+        "pre_actions": [
+          { "seat": "HJ", "type": "raise_to", "bb": 2.0 },
+          { "seat": "SB", "type": "fold" }
+        ],
+        "ranges": [
+          { "seat": "HJ", "preset": "rfi_hj_22" }
+        ],
+        "metrics": { "pot_before": 3.5, "to_call": 1.0, "pot_odds_threshold_pct": 22.2 },
+        "solution": { "action": "call" },
+        "comment": "Порог колла = 22.2%. Мин-опен даёт низкий порог 22.2%.",
+        "tags": ["pot-odds", "single-raised-pot"],
+        "difficulty": "easy"
+      },
+      {
+        "id": "A1-006",
+        "hero": { "seat": "BB", "cards": "8s4h", "hand": "84o" },
+        "pre_actions": [
+          { "seat": "BTN", "type": "raise_to", "bb": 2.0 },
+          { "seat": "SB", "type": "call" }
+        ],
+        "ranges": [
+          { "seat": "BTN", "preset": "rfi_btn_48" }
+        ],
+        "metrics": { "pot_before": 5.0, "to_call": 1.0, "pot_odds_threshold_pct": 16.7 },
+        "solution": { "action": "call" },
+        "comment": "Порог колла = 16.7%. Мультивей: SB уже вложился — порог всего ~16.7%.",
+        "tags": ["pot-odds", "multiway"],
+        "difficulty": "easy"
+      },
+      {
+        "id": "A1-007",
+        "hero": { "seat": "BB", "cards": "Ts7s", "hand": "T7s" },
+        "pre_actions": [
+          { "seat": "CO", "type": "raise_to", "bb": 2.5 },
+          { "seat": "SB", "type": "call" }
+        ],
+        "ranges": [
+          { "seat": "CO", "preset": "rfi_co_29" }
+        ],
+        "metrics": { "pot_before": 6.0, "to_call": 1.5, "pot_odds_threshold_pct": 20.0 },
+        "solution": { "action": "call" },
+        "comment": "Порог колла = 20.0%. SB колд-коллит → мёртвые деньги улучшают пот-оддсы.",
+        "tags": ["pot-odds", "multiway"],
+        "difficulty": "easy"
+      },
+      {
+        "id": "A1-008",
+        "hero": { "seat": "BB", "cards": "Qs5s", "hand": "Q5s" },
+        "pre_actions": [
+          { "seat": "UTG", "type": "raise_to", "bb": 2.5 },
+          { "seat": "HJ", "type": "call" }
+        ],
+        "ranges": [
+          { "seat": "UTG", "preset": "rfi_utg_19" }
+        ],
+        "metrics": { "pot_before": 6.5, "to_call": 1.5, "pot_odds_threshold_pct": 18.8 },
+        "solution": { "action": "call" },
+        "comment": "Порог колла = 18.8%. UTG опен + HJ колл: порог ~18.8%.",
+        "tags": ["pot-odds", "multiway"],
+        "difficulty": "easy"
+      },
+      {
+        "id": "A1-009",
+        "hero": { "seat": "BB", "cards": "Js3h", "hand": "J3o" },
+        "pre_actions": [
+          { "seat": "HJ", "type": "raise_to", "bb": 2.2 },
+          { "seat": "CO", "type": "call" }
+        ],
+        "ranges": [
+          { "seat": "HJ", "preset": "rfi_hj_22" }
+        ],
+        "metrics": { "pot_before": 5.9, "to_call": 1.2, "pot_odds_threshold_pct": 16.9 },
+        "solution": { "action": "call" },
+        "comment": "Порог колла = 16.9%. HJ опен + CO колл: порог ~16.9% — выгодный колл.",
+        "tags": ["pot-odds", "multiway"],
+        "difficulty": "easy"
+      },
+      {
+        "id": "A1-010",
+        "hero": { "seat": "BB", "cards": "Ks2h", "hand": "K2o" },
+        "pre_actions": [
+          { "seat": "CO", "type": "raise_to", "bb": 3.0 },
+          { "seat": "SB", "type": "fold" }
+        ],
+        "ranges": [
+          { "seat": "CO", "preset": "rfi_co_29" }
+        ],
+        "metrics": { "pot_before": 4.5, "to_call": 2.0, "pot_odds_threshold_pct": 30.8 },
+        "solution": { "action": "fold" },
+        "comment": "Порог колла = 30.8%. Крупный сайз CO → нужно ~30.8% — пас с оффсьют.",
+        "tags": ["pot-odds", "single-raised-pot"],
+        "difficulty": "medium"
+      },
+      {
+        "id": "A1-011",
+        "hero": { "seat": "BTN", "cards": "As9h", "hand": "A9o" },
+        "pre_actions": [
+          { "seat": "CO", "type": "raise_to", "bb": 2.5 }
+        ],
+        "ranges": [
+          { "seat": "CO", "preset": "rfi_co_29" }
+        ],
+        "metrics": { "pot_before": 4.0, "to_call": 2.5, "pot_odds_threshold_pct": 38.5 },
+        "solution": { "action": "call" },
+        "comment": "Порог колла = 38.5%. В позиции против CO порог ~38.5%.",
+        "tags": ["pot-odds", "single-raised-pot"],
+        "difficulty": "medium"
+      },
+      {
+        "id": "A1-012",
+        "hero": { "seat": "BTN", "cards": "7s6s", "hand": "76s" },
+        "pre_actions": [
+          { "seat": "HJ", "type": "raise_to", "bb": 3.0 },
+          { "seat": "CO", "type": "fold" }
+        ],
+        "ranges": [
+          { "seat": "HJ", "preset": "rfi_hj_22" }
+        ],
+        "metrics": { "pot_before": 4.5, "to_call": 3.0, "pot_odds_threshold_pct": 40.0 },
+        "solution": { "action": "fold" },
+        "comment": "Порог колла = 40.0%. 3.0bb от HJ → 40% порог; для 76s тонко.",
+        "tags": ["pot-odds", "single-raised-pot"],
+        "difficulty": "hard"
+      },
+      {
+        "id": "A1-013",
+        "hero": { "seat": "BTN", "cards": "KsJh", "hand": "KJo" },
+        "pre_actions": [
+          { "seat": "HJ", "type": "raise_to", "bb": 2.2 },
+          { "seat": "CO", "type": "fold" }
+        ],
+        "ranges": [
+          { "seat": "HJ", "preset": "rfi_hj_22" }
+        ],
+        "metrics": { "pot_before": 3.7, "to_call": 2.2, "pot_odds_threshold_pct": 37.3 },
+        "solution": { "action": "call" },
+        "comment": "Порог колла = 37.3%. 2.2bb снижает порог до ~37.3%.",
+        "tags": ["pot-odds", "single-raised-pot"],
+        "difficulty": "medium"
+      },
+      {
+        "id": "A1-014",
+        "hero": { "seat": "BTN", "cards": "QsTh", "hand": "QTo" },
+        "pre_actions": [
+          { "seat": "UTG", "type": "raise_to", "bb": 2.5 },
+          { "seat": "CO", "type": "fold" }
+        ],
+        "ranges": [
+          { "seat": "UTG", "preset": "rfi_utg_19" }
+        ],
+        "metrics": { "pot_before": 4.0, "to_call": 2.5, "pot_odds_threshold_pct": 38.5 },
+        "solution": { "action": "fold" },
+        "comment": "Порог колла = 38.5%. Против UTG 2.5bb — дисциплинированный фолд.",
+        "tags": ["pot-odds", "single-raised-pot"],
+        "difficulty": "hard"
+      },
+      {
+        "id": "A1-015",
+        "hero": { "seat": "BTN", "cards": "8s6h", "hand": "86o" },
+        "pre_actions": [
+          { "seat": "UTG", "type": "raise_to", "bb": 2.5 },
+          { "seat": "CO", "type": "call" }
+        ],
+        "ranges": [
+          { "seat": "UTG", "preset": "rfi_utg_19" }
+        ],
+        "metrics": { "pot_before": 6.5, "to_call": 2.5, "pot_odds_threshold_pct": 27.8 },
+        "solution": { "action": "call" },
+        "comment": "Порог колла = 27.8%. UTG опен + CO колл → порог ~27.8%.",
+        "tags": ["pot-odds", "multiway"],
+        "difficulty": "medium"
+      },
+      {
+        "id": "A1-016",
+        "hero": { "seat": "BTN", "cards": "Js9h", "hand": "J9o" },
+        "pre_actions": [
+          { "seat": "HJ", "type": "raise_to", "bb": 2.0 },
+          { "seat": "CO", "type": "call" }
+        ],
+        "ranges": [
+          { "seat": "HJ", "preset": "rfi_hj_22" }
+        ],
+        "metrics": { "pot_before": 5.5, "to_call": 2.0, "pot_odds_threshold_pct": 26.7 },
+        "solution": { "action": "call" },
+        "comment": "Порог колла = 26.7%. HJ 2.0bb + CO колл: порог ~26.7% — лёгкий колл.",
+        "tags": ["pot-odds", "multiway"],
+        "difficulty": "easy"
+      },
+      {
+        "id": "A1-017",
+        "hero": { "seat": "BTN", "cards": "Ks9s", "hand": "K9s" },
+        "pre_actions": [
+          { "seat": "CO", "type": "raise_to", "bb": 2.0 }
+        ],
+        "ranges": [
+          { "seat": "CO", "preset": "rfi_co_29" }
+        ],
+        "metrics": { "pot_before": 3.5, "to_call": 2.0, "pot_odds_threshold_pct": 36.4 },
+        "solution": { "action": "call" },
+        "comment": "Порог колла = 36.4%. Мин-опен CO: выгодный колл на баттоне.",
+        "tags": ["pot-odds", "single-raised-pot"],
+        "difficulty": "medium"
+      },
+      {
+        "id": "A1-018",
+        "hero": { "seat": "CO", "cards": "As5s", "hand": "A5s" },
+        "pre_actions": [
+          { "seat": "HJ", "type": "raise_to", "bb": 2.5 }
+        ],
+        "ranges": [
+          { "seat": "HJ", "preset": "rfi_hj_22" }
+        ],
+        "metrics": { "pot_before": 4.0, "to_call": 2.5, "pot_odds_threshold_pct": 38.5 },
+        "solution": { "action": "call" },
+        "comment": "Порог колла = 38.5%. В позиции против HJ порог ~38.5%.",
+        "tags": ["pot-odds", "single-raised-pot"],
+        "difficulty": "medium"
+      },
+      {
+        "id": "A1-019",
+        "hero": { "seat": "CO", "cards": "KsQo", "hand": "KQo" },
+        "pre_actions": [
+          { "seat": "UTG", "type": "raise_to", "bb": 2.5 }
+        ],
+        "ranges": [
+          { "seat": "UTG", "preset": "rfi_utg_19" }
+        ],
+        "metrics": { "pot_before": 4.0, "to_call": 2.5, "pot_odds_threshold_pct": 38.5 },
+        "solution": { "action": "call" },
+        "comment": "Порог колла = 38.5%. Против UTG тайтово, но колл по пот-оддсам возможен.",
+        "tags": ["pot-odds", "single-raised-pot"],
+        "difficulty": "medium"
+      },
+      {
+        "id": "A1-020",
+        "hero": { "seat": "CO", "cards": "Qs9h", "hand": "Q9o" },
+        "pre_actions": [
+          { "seat": "HJ", "type": "raise_to", "bb": 3.0 }
+        ],
+        "ranges": [
+          { "seat": "HJ", "preset": "rfi_hj_22" }
+        ],
+        "metrics": { "pot_before": 4.5, "to_call": 3.0, "pot_odds_threshold_pct": 40.0 },
+        "solution": { "action": "fold" },
+        "comment": "Порог колла = 40.0%. 3.0bb → 40% порог — на краю, фолд.",
+        "tags": ["pot-odds", "single-raised-pot"],
+        "difficulty": "hard"
+      },
+      {
+        "id": "A1-021",
+        "hero": { "seat": "CO", "cards": "6s5h", "hand": "65o" },
+        "pre_actions": [
+          { "seat": "UTG", "type": "raise_to", "bb": 2.2 },
+          { "seat": "HJ", "type": "call" }
+        ],
+        "ranges": [
+          { "seat": "UTG", "preset": "rfi_utg_19" }
+        ],
+        "metrics": { "pot_before": 5.9, "to_call": 2.2, "pot_odds_threshold_pct": 27.2 },
+        "solution": { "action": "call" },
+        "comment": "Порог колла = 27.2%. UTG опен + HJ колл: порог ~27.2%.",
+        "tags": ["pot-odds", "multiway"],
+        "difficulty": "easy"
+      },
+      {
+        "id": "A1-022",
+        "hero": { "seat": "CO", "cards": "As9h", "hand": "A9o" },
+        "pre_actions": [
+          { "seat": "UTG", "type": "raise_to", "bb": 3.0 },
+          { "seat": "HJ", "type": "call" }
+        ],
+        "ranges": [
+          { "seat": "UTG", "preset": "rfi_utg_19" }
+        ],
+        "metrics": { "pot_before": 7.5, "to_call": 3.0, "pot_odds_threshold_pct": 28.6 },
+        "solution": { "action": "call" },
+        "comment": "Порог колла = 28.6%. Даже при 3.0bb мультивей снижает порог до ~28.6%.",
+        "tags": ["pot-odds", "multiway"],
+        "difficulty": "medium"
+      },
+      {
+        "id": "A1-023",
+        "hero": { "seat": "CO", "cards": "9s8s", "hand": "98s" },
+        "pre_actions": [
+          { "seat": "UTG", "type": "raise_to", "bb": 2.0 }
+        ],
+        "ranges": [
+          { "seat": "UTG", "preset": "rfi_utg_19" }
+        ],
+        "metrics": { "pot_before": 3.5, "to_call": 2.0, "pot_odds_threshold_pct": 36.4 },
+        "solution": { "action": "call" },
+        "comment": "Порог колла = 36.4%. Мин-опен UTG: порог ~36.4%.",
+        "tags": ["pot-odds", "single-raised-pot"],
+        "difficulty": "medium"
+      },
+      {
+        "id": "A1-024",
+        "hero": { "seat": "CO", "cards": "Qs8s", "hand": "Q8s" },
+        "pre_actions": [
+          { "seat": "UTG", "type": "raise_to", "bb": 2.0 },
+          { "seat": "HJ", "type": "call" }
+        ],
+        "ranges": [
+          { "seat": "UTG", "preset": "rfi_utg_19" }
+        ],
+        "metrics": { "pot_before": 5.5, "to_call": 2.0, "pot_odds_threshold_pct": 26.7 },
+        "solution": { "action": "call" },
+        "comment": "Порог колла = 26.7%. UTG опен + HJ колл: порог ~26.7% — колл.",
+        "tags": ["pot-odds", "multiway"],
+        "difficulty": "medium"
+      }
+    ]
+  }  

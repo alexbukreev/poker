@@ -3,19 +3,18 @@
 
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import type { PreflopPack } from "./preflop";
+import TrainerSummary from "@/quiz/TrainerSummary";
+import type { HistoryEntry } from "@/quiz/TrainerHistory";
 
 export default function PreflopTrainer({
-  pack,
-  index,
-  onLoadPack,
-  onGoto,
+  pack, index, onLoadPack, onGoto, history = [],
 }: {
   pack: PreflopPack | null;
   index: number;
   onLoadPack: (p: PreflopPack) => void;
   onGoto: (i: number) => void;
+  history?: HistoryEntry[];
 }) {
   const taRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -73,26 +72,22 @@ export default function PreflopTrainer({
               <> · Current: <b>{index + 1}</b></>
             ) : null}
           </div>
-          <div className="flex flex-wrap gap-2">
-            {pack.scenarios.slice(0, 6).map((s, i) => (
-              <button
-                key={s.id || i}
-                onClick={() => onGoto(i)}
-                className={cn(
-                  "rounded border px-2 py-1 text-xs",
-                  i === index
-                    ? "border-foreground bg-foreground text-background"
-                    : "border-foreground/30 hover:border-foreground/60"
-                )}
-                title={s.tags?.join(", ")}
-              >
-                #{i + 1}
-              </button>
-            ))}
-            {pack.scenarios.length > 6 ? (
-              <span className="text-xs opacity-60">…</span>
-            ) : null}
+          <div className="mt-2 overflow-x-auto">
+            <div className="inline-flex gap-2 whitespace-nowrap">
+              {pack.scenarios.map((_, i) => (
+                <Button
+                  key={i}
+                  size="sm"
+                  variant={index === i ? "default" : "outline"}
+                  onClick={() => onGoto(i)}
+                  className="px-2"
+                >
+                  #{i + 1}
+                </Button>
+              ))}
+            </div>
           </div>
+          <TrainerSummary items={history} />
         </div>
       ) : (
         <div className="text-xs opacity-70">

@@ -79,17 +79,28 @@ export default function App() {
 
   function submitAnswer() {
     if (!currentScenario || !answer) return;
+  
     const v = evaluateAnswer(currentScenario, answer);
     setVerdict(v);
-    setHistory((h) => h.concat([{
+  
+    const actionStr =
+      answer.action === "raise_to"
+        ? `raise_to ${answer.bb ?? ""}`.trim()
+        : answer.action;
+  
+    const entry: HistoryEntry = {
       id: currentScenario.id,
       idx: trainerIndex,
-      hand: currentScenario.hero.cards,
-      user: answer.action === "raise_to" ? `raise_to ${answer.bb}` : answer.action,
+      hand: currentScenario.hero.cards ?? undefined,
+      user: actionStr,
       verdict: v.kind,
       note: v.note,
-    }]));
+    };
+  
+    // новее сверху, храним до 100 записей
+    setHistory((prev) => [entry, ...prev].slice(0, 100));
   }
+
 
   return (
     <PrefsProvider>

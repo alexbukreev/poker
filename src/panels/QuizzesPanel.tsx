@@ -44,6 +44,7 @@ export default function QuizzesPanel({
           index={trainerIndex}
           onLoadPack={onLoadTrainerPack}
           onGoto={onGotoTrainerIndex}
+          history={history}
         />
       </UiSection>
 
