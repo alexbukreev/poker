@@ -1,0 +1,159 @@
+{
+    "schema": "preflop.cheatsheet.v1",
+    "meta": {
+      "title": "Диапазон рук",
+      "legend": { "base": "Call", "emphasize": "Core (держим дольше)" },
+      "range_grammar": "tokens: JJ+, A5s-A2s, KJo+, lists (T9s,98s,…), ranges with '-' (T9s-54s). Optional emphasize: **...**"
+    },
+    "ui": {
+      "controls": [
+        { "id": "program", "type": "tabs", "options": ["A1","A2","B3","B4","B5","C6","C7","C8","D9","D10","E11","E12"] },
+        { "id": "context", "type": "tabs", "bind": "blocks.$CURRENT.contexts[].id" },
+        { "id": "size", "type": "segmented", "bind": "blocks.$CURRENT.contexts.$CURRENT.entries[].label" }
+      ],
+      "colors": { "base": "var(--range-base,#d9d9d9)", "emphasize": "var(--range-emph,#8a8a8a)" }
+    },
+  
+    "blocks": {
+      "A1": {
+        "id": "A1",
+        "name": "Пот-оддсы (Call/Fold)",
+        "note": "Порог колла threshold = to_call / (pot_before + to_call). Показывать заранее на карточке вопроса.",
+        "contexts": [
+          {
+            "id": "bb_srp",
+            "label": "BB — SRP (SB фолд)",
+            "entries": [
+              {
+                "label": "2.0 (22.2%)",
+                "raise_to": 2.0,
+                "metrics": { "pot_before": 3.5, "to_call": 1.0, "threshold_pct": 22.2 },
+                "range_spec": "22+,A2s+,K4s+,Q7s+,J7s+,T7s+,**T9s-54s**,A2o+,K8o+,Q9o+,J9o+,T9o"
+              },
+              {
+                "label": "2.2 (24.5%)",
+                "raise_to": 2.2,
+                "metrics": { "pot_before": 3.7, "to_call": 1.2, "threshold_pct": 24.5 },
+                "range_spec": "22+,A2s+,K5s+,Q8s+,J8s+,T8s+,**T9s-65s**,A2o+,K9o+,Q9o+,J9o+,T9o"
+              },
+              {
+                "label": "2.5 (27.3%)",
+                "raise_to": 2.5,
+                "metrics": { "pot_before": 4.0, "to_call": 1.5, "threshold_pct": 27.3 },
+                "range_spec": "22+,A2s+,K6s+,Q8s+,J8s+,T8s+,**T9s-76s**,A2o+,K9o+,Q9o+,J9o+,T9o"
+              },
+              {
+                "label": "3.0 (30.8%)",
+                "raise_to": 3.0,
+                "metrics": { "pot_before": 4.5, "to_call": 2.0, "threshold_pct": 30.8 },
+                "range_spec": "22+,A2s+,K7s+,Q9s+,J9s+,**T9s-87s**,ATo+,KTo+,QTo+,JTo"
+              }
+            ]
+          },
+          {
+            "id": "bb_mw",
+            "label": "BB — Multiway (open + 1 cold-call)",
+            "entries": [
+              {
+                "label": "2.0 (16.7%)",
+                "raise_to": 2.0,
+                "metrics": { "pot_before": 5.0, "to_call": 1.0, "threshold_pct": 16.7 },
+                "range_spec": "22+,A2s+,K5s+,Q8s+,J8s+,T8s+,**T9s-54s**,A9o+,K9o+,Q9o+,J9o+,T9o"
+              },
+              {
+                "label": "2.2 (18.2%)",
+                "raise_to": 2.2,
+                "metrics": { "pot_before": 5.4, "to_call": 1.2, "threshold_pct": 18.2 },
+                "range_spec": "22+,A2s+,K6s+,Q8s+,J8s+,T8s+,**T9s-65s**,A9o+,K9o+,Q9o+,J9o+,T9o"
+              },
+              {
+                "label": "2.5 (20.0%)",
+                "raise_to": 2.5,
+                "metrics": { "pot_before": 6.0, "to_call": 1.5, "threshold_pct": 20.0 },
+                "range_spec": "22+,A2s+,K7s+,Q9s+,J9s+,**T9s-76s**,ATo+,K9o+,Q9o+,J9o+,T9o"
+              },
+              {
+                "label": "3.0 (22.2%)",
+                "raise_to": 3.0,
+                "metrics": { "pot_before": 7.0, "to_call": 2.0, "threshold_pct": 22.2 },
+                "range_spec": "22+,A2s+,K8s+,Q9s+,J9s+,**T9s-87s**,ATo+,KTo+,QTo+,JTo"
+              }
+            ]
+          },
+          {
+            "id": "ip_srp",
+            "label": "IP (BTN/CO) — SRP",
+            "entries": [
+              {
+                "label": "2.0 (36.4%)",
+                "raise_to": 2.0,
+                "metrics": { "pot_before": 3.5, "to_call": 2.0, "threshold_pct": 36.4 },
+                "range_spec": "22+,A2s+,K9s+,Q9s+,J9s+,**JTs-76s**,ATo+,KJo+,QJo,KTo"
+              },
+              {
+                "label": "2.2 (37.3%)",
+                "raise_to": 2.2,
+                "metrics": { "pot_before": 3.7, "to_call": 2.2, "threshold_pct": 37.3 },
+                "range_spec": "22+,A2s+,KTs+,QTs+,JTs,**T9s-87s**,ATo+,KJo+,QJo,KQo"
+              },
+              {
+                "label": "2.5 (38.5%)",
+                "raise_to": 2.5,
+                "metrics": { "pot_before": 4.0, "to_call": 2.5, "threshold_pct": 38.5 },
+                "range_spec": "22+,A5s+,KTs+,QTs+,JTs,**T9s-98s**,ATo+,KQo"
+              },
+              {
+                "label": "3.0 (40.0%)",
+                "raise_to": 3.0,
+                "metrics": { "pot_before": 4.5, "to_call": 3.0, "threshold_pct": 40.0 },
+                "range_spec": "22+,A9s+,KJs+,QJs,JTs,**T9s**,AJo+,KQo"
+              }
+            ]
+          },
+          {
+            "id": "ip_mw",
+            "label": "IP (BTN/CO) — Multiway (open + 1 cold-call)",
+            "entries": [
+              {
+                "label": "2.0 (26.7%)",
+                "raise_to": 2.0,
+                "metrics": { "pot_before": 5.5, "to_call": 2.0, "threshold_pct": 26.7 },
+                "range_spec": "22+,A2s+,K7s+,Q8s+,J8s+,T8s+,**JTs-54s**,ATo+,KQo,QJo,JTo"
+              },
+              {
+                "label": "2.2 (27.2%)",
+                "raise_to": 2.2,
+                "metrics": { "pot_before": 5.9, "to_call": 2.2, "threshold_pct": 27.2 },
+                "range_spec": "22+,A2s+,K8s+,Q9s+,J9s+,**T9s-76s**,ATo+,KQo,QJo"
+              },
+              {
+                "label": "2.5 (27.8%)",
+                "raise_to": 2.5,
+                "metrics": { "pot_before": 6.5, "to_call": 2.5, "threshold_pct": 27.8 },
+                "range_spec": "22+,A5s+,K9s+,Q9s+,J9s+,**T9s-87s**,ATo+,KQo"
+              },
+              {
+                "label": "3.0 (28.6%)",
+                "raise_to": 3.0,
+                "metrics": { "pot_before": 7.5, "to_call": 3.0, "threshold_pct": 28.6 },
+                "range_spec": "22+,A9s+,KTs+,QTs+,JTs,**T9s,98s**,AJo+,KQo"
+              }
+            ]
+          }
+        ]
+      },
+  
+      "A2": { "id": "A2", "name": "RFI (Open/Size)", "contexts": [], "note": "UI: выбрать позицию, показать RFI-пресет и рекомендованные сайзы 2.0/2.2/2.5/3.0. allowed_bets обязателен для сценариев A2." },
+      "B3": { "id": "B3", "name": "3-бет агрессор", "contexts": [], "note": "open (±cold-call) → герой raise_to; указать allowed_bets целей 3-бета и рейнджи опенера/коллера." },
+      "B4": { "id": "B4", "name": "Защита vs 3-бет", "contexts": [], "note": "герой открылся → получил 3-бет → решает call/fold/raise_to (4-бет). Метрики обязательны." },
+      "B5": { "id": "B5", "name": "4-бет агрессор", "contexts": [], "note": "open → 3-бет → герой raise_to. allowed_bets — цели 4-бета (IP/OOP)." },
+      "C6": { "id": "C6", "name": "Сквиз", "contexts": [], "note": "open → ≥1 cold-call → герой чаще raise_to. Привязать рейнджи open/cold-call и сайзы сквиза." },
+      "C7": { "id": "C7", "name": "Мультивей-защита", "contexts": [], "note": "open → cold-call → герой решает call/fold. Метрики обязательны." },
+      "C8": { "id": "C8", "name": "Iso vs лимп", "contexts": [], "note": "лимпы до нас → герой чаще raise_to; чек = call при to_call=0." },
+      "D9": { "id": "D9", "name": "SB open vs BB", "contexts": [], "note": "решение SB: limp или raise_to (2.0/2.5/3.0)." },
+      "D10": { "id": "D10", "name": "BB vs SB", "contexts": [], "note": "SB min-raise или limp → решение BB; допускается call/raise_to/fold, чек = call при to_call=0." },
+      "E11": { "id": "E11", "name": "Анте", "contexts": [], "note": "анте > 0; те же типы, другие метрики/пороги." },
+      "E12": { "id": "E12", "name": "Сайзы опена (варианты)", "contexts": [], "note": "сравнение 2.2/2.5/3.0 в одинаковых спотах." }
+    }
+  }
+  

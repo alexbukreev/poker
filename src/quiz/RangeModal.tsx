@@ -1,87 +1,112 @@
 // src/quiz/RangeModal.tsx
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import RangeMatrix from "./RangeMatrix";
+import RangeMatrix from "@/quiz/RangeMatrix";
 
-type RangeRow = { label: string; range: string };
-type Pack = { calls: RangeRow[]; threebets: RangeRow[] };
-
-const DATA: Record<string, Pack> = {
-  "BBvsBTN_2.5x": {
-    calls: [{ label: "Calls", range: "22+,A2s+,K5s+,Q8s+,J8s+,T8s+,97s+,86s+,A2o+,K9o+,Q9o+,J9o+,T9o" }],
-    threebets: [{ label: "3-bets", range: "JJ+,AQs+,AJs,KQs,A5s-A2s,AQo" }],
-  },
-  "SBvsBTN_2.5x": {
-    calls: [{ label: "Calls (mix)", range: "AJs-ATs,KQs,QJs,JTs" }],
-    threebets: [{ label: "3-bets", range: "TT+,AQs+,AJs,KQs,A5s-A2s,AQo" }],
-  },
-  "BBvsUTG_2.5x": {
-    calls: [{ label: "Calls", range: "22-77,A2s-A5s,ATs-AQs,KTs+,QTs+,JTs,T9s,98s" }],
-    threebets: [{ label: "3-bets (tight)", range: "JJ+,AKs,AKo,A5s-A4s" }],
-  },
+/** Types that match PreflopCheatsheet.json (v1) enough for A1 use */
+type CS_Entry = {
+  label: string;
+  raise_to?: number;
+  metrics?: { pot_before?: number; to_call?: number; threshold_pct?: number };
+  range_spec?: string;
+};
+type CS_Context = { id: string; label: string; entries?: CS_Entry[] };
+type CS_Block = { id: string; name?: string; contexts?: CS_Context[] };
+type Cheatsheet = {
+  schema: string;
+  meta?: { title?: string };
+  blocks: Record<string, CS_Block>;
 };
 
-export default function RangeModal({ spotKey = "BBvsBTN_2.5x" }: { spotKey?: keyof typeof DATA | string }) {
-  const pack = (DATA as any)[spotKey] ?? DATA["BBvsBTN_2.5x"];
-  const [tab, setTab] = useState<"calls"|"threebets">("calls");
-  const [sel, setSel] = useState(0);
+export default function RangeModal({
+  open,
+  onOpenChange,
+  cheatsheet,
+  programId,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  cheatsheet: Cheatsheet;
+  programId: string; // e.g. "A1"
+}) {
+  const block: CS_Block | undefined = cheatsheet?.blocks?.[programId];
 
-  const rows = pack[tab];
-  const current = rows[Math.min(sel, rows.length-1)] ?? rows[0];
+  // indexes for context and entry (size)
+  const [ctxIdx, setCtxIdx] = useState(0);
+  const [entryIdx, setEntryIdx] = useState(0);
+
+  // reset when program changes
+  useEffect(() => {
+    setCtxIdx(0);
+    setEntryIdx(0);
+  }, [programId]);
+
+  const ctx = block?.contexts?.[ctxIdx];
+  const entries = ctx?.entries ?? [];
+  const entry = entries[entryIdx];
+  const spec = entry?.range_spec ?? "";
+
+  // Title: "<programId> — <name>"
+  const modalTitle = useMemo(() => {
+    const name = block?.name || cheatsheet?.meta?.title || "Диапазон рук";
+    return programId ? `${programId} — ${name}` : name;
+  }, [block?.name, cheatsheet?.meta?.title, programId]);
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="secondary" size="sm">Open ranges</Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[720px]">
         <DialogHeader>
-          <DialogTitle>Range matrix — {String(spotKey)}</DialogTitle>
+          <DialogTitle className="text-lg">{modalTitle}</DialogTitle>
         </DialogHeader>
 
-        <Tabs value={tab} onValueChange={(v)=>setTab(v as any)} className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="calls">Calls</TabsTrigger>
-            <TabsTrigger value="threebets">3-bets</TabsTrigger>
-          </TabsList>
+        {/* Contexts */}
+        <div className="mb-3 space-y-2">
+          <div className="flex flex-wrap items-center gap-2">
+            {block?.contexts && block.contexts.length > 0 ? (
+              block.contexts.map((c, i) => (
+                <Button
+                  key={c.id || i}
+                  size="sm"
+                  variant={i === ctxIdx ? "default" : "outline"}
+                  onClick={() => {
+                    setCtxIdx(i);
+                    setEntryIdx(0);
+                  }}
+                >
+                  {c.label || c.id || `Context ${i + 1}`}
+                </Button>
+              ))
+            ) : (
+              <span className="text-sm opacity-60">none</span>
+            )}
+          </div>
 
-          <TabsContent value="calls" className="mt-2">
-            <RowPicker rows={pack.calls} sel={sel} onSel={setSel} />
-            <ScrollArea className="mt-2 max-h-[420px] pr-4">
-              <RangeMatrix range={current.range} />
-            </ScrollArea>
-          </TabsContent>
+          {/* Sizes (entries) */}
+          {entries.length > 0 ? (
+            <div className="flex flex-wrap items-center gap-2">
+              {entries.map((e, i) => (
+                <Button
+                  key={e.label || i}
+                  size="sm"
+                  variant={i === entryIdx ? "default" : "outline"}
+                  onClick={() => setEntryIdx(i)}
+                  className="min-w-[110px] justify-center"
+                >
+                  {e.label || `#${i + 1}`}
+                </Button>
+              ))}
+            </div>
+          ) : (
+            <span className="text-sm opacity-60">none</span>
+          )}
+        </div>
 
-          <TabsContent value="threebets" className="mt-2">
-            <RowPicker rows={pack.threebets} sel={sel} onSel={setSel} />
-            <ScrollArea className="mt-2 max-h-[420px] pr-4">
-              <RangeMatrix range={current.range} />
-            </ScrollArea>
-          </TabsContent>
-        </Tabs>
+        {/* Matrix */}
+        <div className="mt-1">
+          {spec ? <RangeMatrix spec={spec} /> : <div className="text-sm opacity-70">none</div>}
+        </div>
       </DialogContent>
     </Dialog>
-  );
-}
-
-function RowPicker({ rows, sel, onSel }: { rows: RangeRow[]; sel: number; onSel: (i:number)=>void }) {
-  return (
-    <div className="flex flex-wrap gap-2">
-      {rows.map((r, i) => (
-        <button
-          key={i}
-          onClick={() => onSel(i)}
-          className={`rounded border px-2 py-1 text-xs ${
-            sel===i ? "border-foreground bg-foreground text-background" : "border-foreground/30 hover:border-foreground/60"
-          }`}
-          title={r.range}
-        >
-          {r.label}
-        </button>
-      ))}
-    </div>
   );
 }

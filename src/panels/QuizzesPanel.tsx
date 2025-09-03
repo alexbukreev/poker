@@ -6,7 +6,6 @@ import PreflopTrainer from "@/quiz/PreflopTrainer";
 import type { PreflopPack } from "@/quiz/preflop";
 import TrainerHistory, { type HistoryEntry } from "@/quiz/TrainerHistory";
 import PreflopHelp from "@/quiz/PreflopHelp";
-import RangeModal from "@/quiz/RangeModal";
 
 export default function QuizzesPanel({
   state,
@@ -35,10 +34,6 @@ export default function QuizzesPanel({
   return (
     <div className="text-foreground">
       <UiSection title="Preflop Trainer" defaultOpen compactTop>
-        <div className="mb-2 flex items-center gap-2">
-          <PreflopHelp />
-          <RangeModal spotKey="BBvsBTN_2.5x" />
-        </div>
         <PreflopTrainer
           pack={trainerPack}
           index={trainerIndex}
@@ -46,6 +41,9 @@ export default function QuizzesPanel({
           onGoto={onGotoTrainerIndex}
           history={history}
         />
+        <div className="mb-2 flex items-center gap-2">
+          <PreflopHelp />
+        </div>
       </UiSection>
 
       <UiSection title="History (last 20)" defaultOpen>
